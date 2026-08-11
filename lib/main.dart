@@ -1,5 +1,6 @@
 import 'package:cs_elective_2/FlightDetails.dart';
 import 'package:flutter/material.dart';
+import 'Counter.dart';
 
 void main() {
   runApp(const MyApp());
@@ -32,7 +33,9 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: .fromSeed(seedColor: Color(0xFF419A94)),
       ),
-      home: FlightDetails(),
+      home: MyHomePage(
+        title: 'CS Elective 2',
+      ), //FlightDetails(), //CounterPage(),
     );
   }
 }
@@ -115,7 +118,12 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const FlightDetails()),
+          );
+        },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),

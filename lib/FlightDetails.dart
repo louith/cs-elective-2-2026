@@ -1,3 +1,4 @@
+import 'package:cs_elective_2/Counter.dart';
 import 'package:cs_elective_2/components/Info.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -12,11 +13,12 @@ class FlightDetails extends StatelessWidget {
       backgroundColor: Colors.white,
       //  Color(0xFFF5F5F5),
       appBar: AppBar(
+        automaticallyImplyLeading: true,
         backgroundColor: Color(0xFF419A94),
-        leading: IconButton(
-          onPressed: null,
-          icon: Icon(Icons.chevron_left, color: Colors.white),
-        ),
+        // leading: IconButton(
+        //   onPressed: null,
+        //   icon: Icon(Icons.chevron_left, color: Colors.white),
+        // ),
         actions: [
           TextButton(
             onPressed: null,
@@ -211,6 +213,20 @@ class FlightDetails extends StatelessWidget {
             ],
           ),
         ],
+      ),
+      floatingActionButton: ElevatedButton(
+        onPressed: () {
+          // Navigator.pop(context);
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(builder: (context) => const CounterPage()),
+          // );
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const CounterPage()),
+          );
+        },
+        child: Icon(Icons.chevron_right_outlined),
       ),
     );
   }
