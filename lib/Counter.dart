@@ -1,3 +1,4 @@
+import 'package:cs_elective_2/components/MiddleWidget.dart';
 import 'package:flutter/material.dart';
 
 class CounterPage extends StatefulWidget {
@@ -9,6 +10,7 @@ class CounterPage extends StatefulWidget {
 
 class _CounterPageState extends State<CounterPage> {
   int count = 0;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -17,19 +19,29 @@ class _CounterPageState extends State<CounterPage> {
     // good place for: subscriptions, controllers, one-time setup
   }
 
+  void _incrementCounter() {
+    setState(() {
+      count++;
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     print('build — runs on EVERY rebuild'); // 3
     return Scaffold(
       appBar: AppBar(automaticallyImplyActions: true),
-      body: Center(child: Text('Count: $count')),
+      body: Center(child: Column(
+        children: [
+          Text('Tap the button to toggle the theme'),
+            SizedBox(height: 16),
+            MiddleWidget(),
+            SizedBox(height: 16),
+          Text('Count: $count'),
+        ],
+      )),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(() {
-            // 4
-            count++;
-          });
-        },
+        onPressed: _incrementCounter,
         child: const Icon(Icons.add),
       ),
     );
