@@ -2,8 +2,12 @@ import 'package:cs_elective_2/FlightDetails.dart';
 import 'package:cs_elective_2/async_programming/Async.dart';
 import 'package:cs_elective_2/dart_syntax/Syntax.dart';
 import 'package:cs_elective_2/pages/InheritedWidget.dart';
+import 'package:cs_elective_2/pages/Provider.dart';
+import 'package:cs_elective_2/providers/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'Counter.dart';
+import 'theme/app_theme.dart';
 
 void main() {
   runApp(ThemeManager(child: const MyApp()));
@@ -16,43 +20,49 @@ static const Color seedColor = Color(0xFF419A94);
   @override
   Widget build(BuildContext context) {
     final themeProvider = ThemeProvider.of(context);
-    return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData.light(),
-      darkTheme: ThemeData.dark(),
-      themeMode: themeProvider?.themeMode ?? ThemeMode.light,
-//  theme: ThemeData(
-//         useMaterial3: true,
-
-//  colorScheme: ColorScheme.fromSeed(
-//     seedColor: const Color(0xFF419A94),
-//   ).copyWith(
-//     primaryContainer: const Color.fromARGB(255, 56, 148, 140),
-//     onPrimaryContainer: const Color(0xFF00201E),
-//   ),
-//         scaffoldBackgroundColor: Colors.white,
-
-//         appBarTheme: AppBarTheme(
-//           backgroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
-//           foregroundColor: Colors.white,
-//           elevation: 0,
-//         ),
-
-//         elevatedButtonTheme: ElevatedButtonThemeData(
-//           style: ElevatedButton.styleFrom(
-//             backgroundColor: seedColor,
-//             foregroundColor: Colors.white,
-//           ),
-//         ),
-//       ),     
- home: CounterPage()
-      // SyntaxWidget(
-      //    name2: 'Clark',
-      // ),
-      // home: MyHomePage(
-      //   title: 'CS Elective 2',
-      // ), //FlightDetails(), //CounterPage(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => UserProvider()),
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
+        theme: lightTheme,
+        darkTheme: darkTheme,
+        themeMode: themeProvider?.themeMode ?? ThemeMode.light,
+      //  theme: ThemeData(
+      //         useMaterial3: true,
+      
+      //  colorScheme: ColorScheme.fromSeed(
+      //     seedColor: const Color(0xFF419A94),
+      //   ).copyWith(
+      //     primaryContainer: const Color.fromARGB(255, 56, 148, 140),
+      //     onPrimaryContainer: const Color(0xFF00201E),
+      //   ),
+      //         scaffoldBackgroundColor: Colors.white,
+      
+      //         appBarTheme: AppBarTheme(
+      //           backgroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
+      //           foregroundColor: Colors.white,
+      //           elevation: 0,
+      //         ),
+      
+      //         elevatedButtonTheme: ElevatedButtonThemeData(
+      //           style: ElevatedButton.styleFrom(
+      //             backgroundColor: seedColor,
+      //             foregroundColor: Colors.white,
+      //           ),
+      //         ),
+      //       ),     
+       home: ProviderDemo(),
+       //CounterPage()
+        // SyntaxWidget(
+        //    name2: 'Clark',
+        // ),
+        // home: MyHomePage(
+        //   title: 'CS Elective 2',
+        // ), //FlightDetails(), //CounterPage(),
+      ),
     );
   }
 }
