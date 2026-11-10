@@ -1,5 +1,6 @@
 import 'package:cs_elective_2/models/product.dart';
 import 'package:cs_elective_2/pages/AddProduct.dart';
+import 'package:cs_elective_2/providers/auth_providers.dart';
 import 'package:cs_elective_2/providers/category_provider.dart';
 import 'package:cs_elective_2/providers/product_filter_provider.dart';
 import 'package:cs_elective_2/providers/product_provider.dart';
@@ -46,6 +47,30 @@ class _ProductsPageState extends ConsumerState<ProductsPage> {
     _debounce?.cancel();
     _search.text = '';
     ref.read(productFilterProvider.notifier).reset();
+  }
+
+  Future<void> _confirmLogout(BuildContext context, WidgetRef ref) async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Log out?'),
+        content: const Text('Are you sure you want to log out?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Log out'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm == true) {
+      await ref.read(authControllerProvider.notifier).signOut();
+    }
   }
 
   @override
@@ -95,11 +120,40 @@ class _ProductsPageState extends ConsumerState<ProductsPage> {
       );
     }
 
+    Future<void> _confirmLogout(BuildContext context, WidgetRef ref) async {
+      final confirm = await showDialog<bool>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('Log out?'),
+          content: const Text('Are you sure you want to log out?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: const Text('Cancel'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(ctx, true),
+              child: const Text('Log out'),
+            ),
+          ],
+        ),
+      );
+
+      if (confirm == true) {
+        await ref.read(authControllerProvider.notifier).signOut();
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Products'),
         actions: [
           IconButton(icon: const Icon(Icons.shopping_bag), onPressed: () {}),
+          IconButton(
+            icon: const Icon(Icons.logout),
+            tooltip: 'Log out',
+            onPressed: () => _confirmLogout(context, ref),
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(

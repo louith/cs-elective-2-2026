@@ -5,6 +5,7 @@ import 'package:cs_elective_2/pages/InheritedWidget.dart';
 import 'package:cs_elective_2/pages/Products.dart';
 import 'package:cs_elective_2/pages/Provider.dart';
 import 'package:cs_elective_2/providers/user_provider.dart';
+import 'package:cs_elective_2/services/auth_gate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart';
@@ -12,6 +13,7 @@ import 'Counter.dart';
 import 'theme/app_theme.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load();
@@ -26,51 +28,18 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-static const Color seedColor = Color(0xFF419A94);
+  static const Color seedColor = Color(0xFF419A94);
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     final themeProvider = ThemeProvider.of(context);
-    return       
-      MaterialApp(
-        title: 'Flutter Demo',
-        debugShowCheckedModeBanner: false,
-        theme: lightTheme,
-        darkTheme: darkTheme,
-        themeMode: themeProvider?.themeMode ?? ThemeMode.light,
-      //  theme: ThemeData(
-      //         useMaterial3: true,
-      
-      //  colorScheme: ColorScheme.fromSeed(
-      //     seedColor: const Color(0xFF419A94),
-      //   ).copyWith(
-      //     primaryContainer: const Color.fromARGB(255, 56, 148, 140),
-      //     onPrimaryContainer: const Color(0xFF00201E),
-      //   ),
-      //         scaffoldBackgroundColor: Colors.white,
-      
-      //         appBarTheme: AppBarTheme(
-      //           backgroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
-      //           foregroundColor: Colors.white,
-      //           elevation: 0,
-      //         ),
-      
-      //         elevatedButtonTheme: ElevatedButtonThemeData(
-      //           style: ElevatedButton.styleFrom(
-      //             backgroundColor: seedColor,
-      //             foregroundColor: Colors.white,
-      //           ),
-      //         ),
-      //       ),     
-       home: ProductsPage(),
-       //CounterPage()
-        // SyntaxWidget(
-        //    name2: 'Clark',
-        // ),
-        // home: MyHomePage(
-        //   title: 'CS Elective 2',
-        // ), //FlightDetails(), //CounterPage(),
-      // ),
+    return MaterialApp(
+      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
+      theme: lightTheme,
+      darkTheme: darkTheme,
+      themeMode: themeProvider?.themeMode ?? ThemeMode.light,
+      home: AuthGate(),
     );
   }
 }
