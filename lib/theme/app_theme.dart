@@ -19,6 +19,16 @@ final lightTheme = ThemeData(
       foregroundColor: const Color.fromARGB(255, 9, 210, 224),
     ),
   ),
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ElevatedButton.styleFrom(
+      backgroundColor: const Color.fromARGB(255, 9, 210, 224),
+      foregroundColor: Colors.white,
+    ),
+  ),
+  floatingActionButtonTheme: const FloatingActionButtonThemeData(
+    backgroundColor: Color.fromARGB(255, 9, 210, 224),
+    foregroundColor: Colors.white,
+  ),
 );
 
 final darkTheme = ThemeData(
