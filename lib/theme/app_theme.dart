@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 final lightTheme = ThemeData(
   brightness: Brightness.light,
@@ -28,6 +29,85 @@ final lightTheme = ThemeData(
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
     backgroundColor: Color.fromARGB(255, 9, 210, 224),
     foregroundColor: Colors.white,
+  ),
+  textTheme: TextTheme(
+    // Big titles / hero text
+    displayLarge: GoogleFonts.poppins(
+      fontSize: 57,
+      fontWeight: FontWeight.w700,
+      letterSpacing: -0.5,
+    ),
+    displayMedium: GoogleFonts.poppins(
+      fontSize: 45,
+      fontWeight: FontWeight.w700,
+    ),
+    displaySmall: GoogleFonts.poppins(
+      fontSize: 36,
+      fontWeight: FontWeight.w600,
+    ),
+
+    // Screen titles
+    headlineLarge: GoogleFonts.poppins(
+      fontSize: 32,
+      fontWeight: FontWeight.w700,
+      height: 1.2,
+    ),
+    headlineMedium: GoogleFonts.poppins(
+      fontSize: 28,
+      fontWeight: FontWeight.w600,
+      height: 1.25,
+    ),
+    headlineSmall: GoogleFonts.poppins(
+      fontSize: 24,
+      fontWeight: FontWeight.w600,
+    ),
+
+    // Section / card titles
+    titleLarge: GoogleFonts.poppins(fontSize: 22, fontWeight: FontWeight.w600),
+    titleMedium: GoogleFonts.inter(
+      fontSize: 16,
+      fontWeight: FontWeight.w600,
+      letterSpacing: 0.15,
+    ),
+    titleSmall: GoogleFonts.inter(
+      fontSize: 14,
+      fontWeight: FontWeight.w600,
+      letterSpacing: 0.1,
+    ),
+
+    // Paragraphs
+    bodyLarge: GoogleFonts.inter(
+      fontSize: 16,
+      fontWeight: FontWeight.w400,
+      height: 1.5,
+    ),
+    bodyMedium: GoogleFonts.inter(
+      fontSize: 14,
+      fontWeight: FontWeight.w400,
+      height: 1.5,
+    ),
+    bodySmall: GoogleFonts.inter(
+      fontSize: 12,
+      fontWeight: FontWeight.w400,
+      height: 1.4,
+    ),
+
+    // Buttons / captions / tags
+    labelLarge: GoogleFonts.inter(
+      fontSize: 14,
+      fontWeight: FontWeight.w600,
+      letterSpacing: 0.5,
+    ),
+    labelMedium: GoogleFonts.inter(
+      fontSize: 12,
+      fontWeight: FontWeight.w500,
+      letterSpacing: 0.5,
+    ),
+    labelSmall: GoogleFonts.inter(
+      fontSize: 11,
+      fontWeight: FontWeight.w500,
+      letterSpacing: 0.5,
+    ),
   ),
 );
 

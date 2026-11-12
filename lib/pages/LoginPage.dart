@@ -1,3 +1,4 @@
+import 'package:cs_elective_2/pages/Signup.dart';
 import 'package:cs_elective_2/providers/auth_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -59,6 +60,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               obscureText: true,
               decoration: const InputDecoration(labelText: 'Password'),
             ),
+            Divider(color: Colors.grey[100]?.withAlpha(50), thickness: 0.5),
             const SizedBox(height: 24),
             SizedBox(
               width: double.infinity,
@@ -79,13 +81,19 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               ),
             ),
             TextButton(
-              onPressed: isLoading
-                  ? null
-                  : () => controller.signUp(
-                      _emailController.text,
-                      _passwordController.text,
-                    ),
-              child: const Text('Create account'),
+              // onPressed: isLoading
+              //     ? null
+              //     : () => controller.signUp(
+              //         _emailController.text,
+              //         _passwordController.text,
+              //       ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SignupPage()),
+                );
+              },
+              child: const Text("Don't have an account? Sign up"),
             ),
           ],
         ),

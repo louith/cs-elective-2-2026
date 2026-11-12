@@ -35,10 +35,20 @@ class AuthController extends AsyncNotifier<void> {
     );
   }
 
-  Future<void> signUp(String email, String password) async {
+  Future<void> signUp(
+    String email,
+    String password,
+    String firstname,
+    String lastname,
+  ) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(
-      () => _service.signUpWithEmailPassword(email.trim(), password),
+      () => _service.signUpWithEmailPassword(
+        email.trim(),
+        password,
+        firstname,
+        lastname,
+      ),
     );
   }
 
@@ -47,6 +57,12 @@ class AuthController extends AsyncNotifier<void> {
     state = await AsyncValue.guard(() => _service.signOut());
   }
 }
+
+final isAdminProvider = FutureProvider<bool>((ref) async {
+  ref.watch(authStateProvider); // re-check whenever someone logs in or out
+  final res = await Supabase.instance.client.rpc('is_admin');
+  return res == true;
+});
 
 final authControllerProvider = AsyncNotifierProvider<AuthController, void>(
   AuthController.new,

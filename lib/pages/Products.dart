@@ -16,11 +16,8 @@ class ProductsPage extends ConsumerStatefulWidget {
 }
 
 class _ProductsPageState extends ConsumerState<ProductsPage> {
-  @override
   final _search = TextEditingController();
   Timer? _debounce;
-
-  // todo: add ui for search and category filtera
 
   @override
   void initState() {
@@ -73,76 +70,53 @@ class _ProductsPageState extends ConsumerState<ProductsPage> {
     }
   }
 
+  Future<void> _confirmDelete(Product p) async {
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Confirm Delete'),
+        content: Text('Are you sure you want to delete "${p.name}"?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+
+    if (ok != true) return;
+
+    try {
+      await ref.read(productProvider.notifier).deleteProduct(p.id);
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Product deleted')));
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Delete failed: $e')));
+    }
+  }
+
+  void _editProduct(Product p) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => AddProductPage(product: p)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isAdmin = ref.watch(isAdminProvider).value ?? false;
     final productsAsync = ref.watch(productProvider);
-
-    Future<void> _confirmDelete(Product p) async {
-      final ok = await showDialog<bool>(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Confirm Delete'),
-          content: Text('Are you sure you want to delete "${p.name}"?'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text('Cancel'),
-            ),
-            ElevatedButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: const Text('Delete'),
-            ),
-          ],
-        ),
-      );
-
-      if (ok != true) return;
-
-      try {
-        await ref.read(productProvider.notifier).deleteProduct(p.id);
-        if (!mounted) return;
-
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Product deleted')));
-      } catch (e) {
-        if (!mounted) return;
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Delete failed: $e')));
-      }
-    }
-
-    void _editProduct(Product p) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (_) => AddProductPage(product: p)),
-      );
-    }
-
-    Future<void> _confirmLogout(BuildContext context, WidgetRef ref) async {
-      final confirm = await showDialog<bool>(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: const Text('Log out?'),
-          content: const Text('Are you sure you want to log out?'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(ctx, false),
-              child: const Text('Cancel'),
-            ),
-            FilledButton(
-              onPressed: () => Navigator.pop(ctx, true),
-              child: const Text('Log out'),
-            ),
-          ],
-        ),
-      );
-
-      if (confirm == true) {
-        await ref.read(authControllerProvider.notifier).signOut();
-      }
-    }
 
     return Scaffold(
       appBar: AppBar(
@@ -156,13 +130,16 @@ class _ProductsPageState extends ConsumerState<ProductsPage> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => const AddProductPage()),
-        ),
-        child: const Icon(Icons.add),
-      ),
+      // only admins can add products
+      floatingActionButton: isAdmin
+          ? FloatingActionButton(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const AddProductPage()),
+              ),
+              child: const Icon(Icons.add),
+            )
+          : null,
       body: Column(
         children: [
           _buildFilterBar(),
@@ -212,8 +189,9 @@ class _ProductsPageState extends ConsumerState<ProductsPage> {
                                               ),
                                           loadingBuilder:
                                               (context, child, progress) {
-                                                if (progress == null)
+                                                if (progress == null) {
                                                   return child;
+                                                }
                                                 return const Center(
                                                   child:
                                                       CircularProgressIndicator(),
@@ -227,47 +205,46 @@ class _ProductsPageState extends ConsumerState<ProductsPage> {
                                           ),
                                         ),
 
-                                  Positioned(
-                                    top: 4,
-                                    right: 4,
-                                    child: Row(
-                                      children: [
-                                        CircleAvatar(
-                                          radius: 18,
-                                          backgroundColor: Colors.white70,
-                                          child: IconButton(
-                                            padding: EdgeInsets.zero,
-                                            iconSize: 20,
-                                            icon: const Icon(
-                                              Icons.edit,
-                                              // color: Colors.blue,
+                                  // edit and delete: admins only
+                                  if (isAdmin)
+                                    Positioned(
+                                      top: 4,
+                                      right: 4,
+                                      child: Row(
+                                        children: [
+                                          CircleAvatar(
+                                            radius: 18,
+                                            backgroundColor: Colors.white70,
+                                            child: IconButton(
+                                              padding: EdgeInsets.zero,
+                                              iconSize: 20,
+                                              icon: const Icon(Icons.edit),
+                                              onPressed: () => _editProduct(p),
                                             ),
-                                            onPressed: () => _editProduct(p),
                                           ),
-                                        ),
-                                        CircleAvatar(
-                                          radius: 18,
-                                          backgroundColor: Colors.white70,
-                                          child: IconButton(
-                                            padding: EdgeInsets.zero,
-                                            iconSize: 20,
-                                            icon: const Icon(
-                                              Icons.delete,
-                                              color: Colors.redAccent,
+                                          CircleAvatar(
+                                            radius: 18,
+                                            backgroundColor: Colors.white70,
+                                            child: IconButton(
+                                              padding: EdgeInsets.zero,
+                                              iconSize: 20,
+                                              icon: const Icon(
+                                                Icons.delete,
+                                                color: Colors.redAccent,
+                                              ),
+                                              onPressed: () =>
+                                                  _confirmDelete(p),
                                             ),
-                                            onPressed: () => _confirmDelete(p),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
-                                  ),
                                 ],
                               ),
                             ),
                             Padding(
                               padding: const EdgeInsets.all(12),
                               child: Column(
-                                // mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
                                   Text(
